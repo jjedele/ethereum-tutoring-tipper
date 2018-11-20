@@ -1,0 +1,27 @@
+{
+  "name": "ethereum-tutoring-tipper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjedele/ethereum-tutoring-tipper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjedele/ethereum-tutoring-tipper/issues"
+  },
+  "homepage": "https://github.com/jjedele/ethereum-tutoring-tipper#readme",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "fetch": "^1.1.0",
+    "web3": "^1.0.0-beta.36"
+  }
+}
