@@ -2,26 +2,41 @@
   "name": "ethereum-tutoring-tipper",
   "version": "1.0.0",
   "description": "",
-  "main": "truffle.js",
   "directories": {
     "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jjedele/ethereum-tutoring-tipper.git"
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jjedele/ethereum-tutoring-tipper/issues"
-  },
   "homepage": "https://github.com/jjedele/ethereum-tutoring-tipper#readme",
   "dependencies": {
     "bluebird": "^3.5.3",
+    "drizzle": "^1.2.4",
+    "drizzle-react": "^1.2.0",
+    "drizzle-react-components": "^1.2.0",
     "fetch": "^1.1.0",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-scripts": "2.1.1",
+    "truffle": "^4.1.14",
     "web3": "^1.0.0-beta.36"
-  }
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "compile-contracts": "truffle compile && cp -r build/contracts src/"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
