@@ -39,6 +39,21 @@ contract('TUMOracle', accounts => {
 			    })
 		    })
 	    })
-    })
+	})
+	
+	it('should allow TUM to overwrite a grade for a course if a grade already exists', () => {
+	return TUMOracle.deployed()
+		.then(async instance => {
+		let owner = await instance.owner()
+		await instance.addGrade('phil202', 2, 28, {from: owner})
+		let originalGrade = await instance.getGrade('phil202', 2, {from: owner})
+		await instance.addGrade('phil202', 2, 39, {from: owner})
+		let newGrade = await instance.getGrade('phil202', 2, {from: owner})
+		// compare first and second grades added
+		assert.notEqual(originalGrade, newGrade)
+		// make sure second grade added is correct
+		assert.equal(newGrade, 39)
+		})
+	})
 
 })
