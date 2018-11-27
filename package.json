@@ -18,7 +18,10 @@
     "drizzle-react-components": "^1.2.0",
     "fetch": "^1.1.0",
     "react": "^16.6.3",
+    "react-bootstrap": "^0.32.4",
     "react-dom": "^16.6.3",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
     "truffle": "^4.1.14",
     "web3": "^1.0.0-beta.36"
