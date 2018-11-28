@@ -7,23 +7,29 @@ import "./TUMOracle.sol"; // maybe this is not correct, should call from address
 
 contract Tipping {
 
-    struct Student {
-        string studentName;
-        uint8 studentId;
-        uint8 courseId;
-        uint8 groupId;
-        address studentAdd;
-    }
+    // struct Student {
+    //     string studentName;
+    //     uint8 studentId;
+    //     uint8 courseId;
+    //     uint8 groupId;
+    //     address studentAdd;
+    // }
 
     address public owner; // owner is meant to be the tutor
-    Student[] studentList; // list of students who have paid in
-    mapping (uint => uint8) studentIdToAmount; // student contribution
-    mapping (uint8 => mapping (uint8 => uint8)) courseIdGroupIdToPOT; // total in the pot
-    uint gradeGoal; // grade threshold for 100% payout - can't use uint8 from global store...
+    mapping (address => uint8) studentAddToAmount; // student contribution to this contract
+    //mapping (uint8 => mapping (uint8 => uint8)) courseIdGroupIdToPOT; // total in the pot
 
-    constructor () public {
+    string courseId;
+    uint8 groupId;
+    uint goalGrade; // grade threshold for 100% payout - can't use uint8 from global store...
+    address tumContract;
+
+    constructor (address _tumContract, string _courseId, uint8 _groupId) public {
         owner = msg.sender;
         goalGrade = 18;
+        tumContract = _tumContract;
+        courseId = _courseId;
+        groupId = _groupId;
     }
 
     // allow the tutor to refund everyone
@@ -40,16 +46,21 @@ contract Tipping {
         // code here for TAKING ether.
     }
 
+    // manual getGrade()
+    function getGrade() public returns (uint8) {
+        TUMOracle t = TUMOracle(tumContract);
+        return (t.getGrade(courseId, groupId));
+    }
+
     // execute - wait for event msg that grade has
     // been added then pay out the course
     function payOut() internal {
-        
+         // Would it cost more gas to STORE a total or to calculate pure?
     }
 
     // whatever scaling or payout function related to the 'goalGrade' parameter
     function calcPayoutRatio() internal pure returns (uint) {
-        //uint8 actualGrade = TUMOracle.getGrade()
+        uint8 actualGrade = getGrade();
     }
-
 
 }
