@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { DrizzleProvider, drizzleConnect } from 'drizzle-react';
+import { Drizzle, generateStore } from 'drizzle';
+import { DrizzleContext } from 'drizzle-react';
 
 import TUMOracle from './contracts/TUMOracle.json';
 
@@ -16,12 +17,13 @@ const options = {
   }
 };
 
-const ConnectedApp = drizzleConnect(App, state => ({ drizzle: state }));
+const drizzleStore = generateStore(options);
+const drizzle = new Drizzle(options, drizzleStore);
 
 ReactDOM.render(
-  <DrizzleProvider options={options}>
-    <ConnectedApp />
-  </DrizzleProvider>,
+  <DrizzleContext.Provider drizzle={drizzle}>
+    <App />
+  </DrizzleContext.Provider>,
   document.getElementById('root')
 );
 
