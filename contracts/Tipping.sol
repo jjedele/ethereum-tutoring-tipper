@@ -38,18 +38,18 @@ contract Tipping {
     }
 
     // allows accounts to pay in to the contract
-    function payIn(string memory _studentName, uint8 _studentId, uint8 _courseId, uint8 _groupId, address _studentAdd, uint8 _amount) public {
-        require(_amount > 0); // must pay in a valid amount
-        studentList.push(Student(_studentName, _studentId, _courseId, _groupId, _studentAdd));
-        studentIdToAmount[_studentId] = _amount; // add to contribution ledger
-        courseIdGroupIdToPot[_couseId][_groupId] += _amount; // add to pot
-        // code here for TAKING ether.
-    }
+    // function payIn(string memory _studentName, uint8 _studentId, uint8 _courseId, uint8 _groupId, address _studentAdd, uint8 _amount) public {
+    //     require(_amount > 0); // must pay in a valid amount
+    //     studentList.push(Student(_studentName, _studentId, _courseId, _groupId, _studentAdd));
+    //     studentIdToAmount[_studentId] = _amount; // add to contribution ledger
+    //     //courseIdGroupIdToPot[_couseId][_groupId] += _amount; // add to pot
+    //     // code here for TAKING ether.
+    // }
 
     // manual getGrade()
     function getGrade() public returns (uint8) {
-        TUMOracle t = TUMOracle(tumContract);
-        return (t.getGrade(courseId, groupId));
+        TUMOracle _t = TUMOracle(tumContract);
+        return (_t.getGrade(courseId, groupId));
     }
 
     // execute - wait for event msg that grade has
@@ -59,7 +59,7 @@ contract Tipping {
     }
 
     // whatever scaling or payout function related to the 'goalGrade' parameter
-    function calcPayoutRatio() internal pure returns (uint) {
+    function calcPayoutRatio() internal returns (uint) {
         uint8 actualGrade = getGrade();
     }
 
