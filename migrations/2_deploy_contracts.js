@@ -4,6 +4,6 @@ var TipperContract = artifacts.require("./Tipping.sol");
 module.exports = function(deployer) {
   deployer.deploy(TUMOracleContract).then(() => {
     //deployer.link(TUMOracleContract, TipperContract);
-    deployer.deploy(TipperContract, TUMOracleContract.address, "testcourse", 1);
+    return deployer.deploy(TipperContract, TUMOracleContract.address);
   });
 };
