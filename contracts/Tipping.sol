@@ -1,66 +1,59 @@
 pragma solidity ^0.4.18;
 
-import "./TUMOracle.sol"; // maybe this is not correct, should call from address instead of import
-
-// NOTES: a student can be in multiple courses but only one group per course.
-//mapping (uint8 => mapping(string => uint8)) studentIdToCourseGroup; // [studentId][courseId] -> [groupId]
+import "./TUMOracle.sol";
 
 contract Tipping {
 
-    // struct Student {
-    //     string studentName;
-    //     uint8 studentId;
-    //     uint8 courseId;
-    //     uint8 groupId;
-    //     address studentAdd;
-    // }
-
-    address public owner; // owner is meant to be the tutor
-    mapping (address => uint8) studentAddToAmount; // student contribution to this contract
-    //mapping (uint8 => mapping (uint8 => uint8)) courseIdGroupIdToPOT; // total in the pot
-
-    string courseId;
-    uint8 groupId;
-    uint goalGrade; // grade threshold for 100% payout - can't use uint8 from global store...
-    address tumContract;
-
-    constructor (address _tumContract, string _courseId, uint8 _groupId) public {
-        owner = msg.sender;
-        goalGrade = 18;
-        tumContract = _tumContract;
-        courseId = _courseId;
-        groupId = _groupId;
+    constructor (address _tumOracle) public {
+        tumOracle = _tumOracle;
     }
 
-    // allow the tutor to refund everyone
-    function refundAll() external {
-        require(owner == msg.sender);
+    struct Student {
+        address addr; // address of funder/student
+        uint amount; // amount contributed
     }
 
-    // allows accounts to pay in to the contract
-    // function payIn(string memory _studentName, uint8 _studentId, uint8 _courseId, uint8 _groupId, address _studentAdd, uint8 _amount) public {
-    //     require(_amount > 0); // must pay in a valid amount
-    //     studentList.push(Student(_studentName, _studentId, _courseId, _groupId, _studentAdd));
-    //     studentIdToAmount[_studentId] = _amount; // add to contribution ledger
-    //     //courseIdGroupIdToPot[_couseId][_groupId] += _amount; // add to pot
-    //     // code here for TAKING ether.
-    // }
+    struct TutorGroup {
+        address tutor; // address to be paid out
+        string courseId; // property of the actual group
+        uint8 groupId; // property of the actual group
+        uint8 tutorGroupId; // ID for specific TG
+        uint8 gradeGoal; // grade threshold
 
-    // manual getGrade()
-    function getGrade() public returns (uint8) {
-        TUMOracle _t = TUMOracle(tumContract);
-        return (_t.getGrade(courseId, groupId));
+        uint numStudents; // index/number of students who funded the group
+        uint amount; // total amount of funding
+
+        mapping (uint => Student) numStudentToStudent; // maps the index of funder to Student
     }
 
-    // execute - wait for event msg that grade has
-    // been added then pay out the course
-    function payOut() internal {
-         // Would it cost more gas to STORE a total or to calculate pure?
+    // State variable for numGroups - will also be tutorGroupId
+    uint numGroups;
+    
+    // interface for the grade results
+    address tumOracle;
+
+    // Mapping for TutorGroup datatypes
+    mapping (uint => TutorGroup) tutorGroupIdToTutorGroup;
+
+    // Creates a tutorGroup
+    function newTutorGroup(address _tutor, string _courseId, uint8 _groupdId, uint8 _gradeGoal) public {
+        tutorGroupId = numGroups++;
+        TutorGroup t = tutorGroupIdToTutorGroup[tutorGroupId];
+        // populate TutorGroup object
+        t.tumContract = _tumContract;
+        t.tutor = _tutor;
+        t.courseId = _courseId;
+        t.groupId = _groupdId;
+        t.gradeGoal = _gradeGoal;
     }
 
-    // whatever scaling or payout function related to the 'goalGrade' parameter
-    function calcPayoutRatio() internal returns (uint) {
-        uint8 actualGrade = getGrade();
+    function payIn(uint8 _tutorGroupId) public payable {
+        TutorGroup t = tutorGroupIdToTutorGroup[_tutorGroupId];
+        Student s = t.numStudentToStudent[t.numStudents++];
+        s.addr = msg.sender;
+        s.amount = msg.value;
+        t.amount += s.amount;
     }
+
 
 }
