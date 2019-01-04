@@ -3,77 +3,68 @@ pragma solidity ^0.4.18;
 import "./TUMOracle.sol";
 
 contract Tipping {
+  
+    // interface for the grade results
+    address tumOracle;
 
+    mapping(string => mapping(uint8 => TutorGroup)) tutorGroups;
+    
     constructor (address _tumOracle) public {
         tumOracle = _tumOracle;
     }
 
-    struct Student {
+    struct Contribution {
         address addr; // address of funder/student
         uint amount; // amount contributed
     }
 
     struct TutorGroup {
         address tutor; // address to be paid out
-        string courseId; // property of the actual group
-        uint8 groupId; // property of the actual group
-        uint32 tutorGroupId; // ID for specific TG
         uint8 gradeGoal; // grade threshold
 
-        uint numStudents; // index/number of students who funded the group
         uint amount; // total amount of funding
+
+        uint8 nContributions;
+        mapping(uint8 => Contribution) contributions;
+
         bool resolved; // each tutor group can only be PAID/RESOLVED once.
-
-        mapping (uint => Student) numStudentToStudent; // maps the index of funder to Student
     }
 
-    // State variable for numGroups - will also be tutorGroupId
-    uint32 numGroups;
-    
-    // interface for the grade results
-    address tumOracle;
+    event PayedIn(string course, uint8 group, uint newTotal);
 
-    // Mapping for TutorGroup datatypes
-    mapping (uint => TutorGroup) tutorGroupIdToTutorGroup;
-
-    event PayedIn(uint32 tutorGroupId, uint newTotal);
-
-    // Creates a tutorGroup
-    function newTutorGroup(address _tutor, string _courseId, uint8 _groupdId, uint8 _gradeGoal) public returns (uint32) {
-        uint32 tutorGroupId = numGroups++;
-        TutorGroup storage t = tutorGroupIdToTutorGroup[tutorGroupId];
-        // populate TutorGroup object
-        t.tutor = _tutor;
-        t.courseId = _courseId;
-        t.groupId = _groupdId;
-        t.gradeGoal = _gradeGoal;
-        t.resolved = false;
-        return (tutorGroupId);
+    function newTutorGroup(address _tutor, string _course, uint8 _group, uint8 _gradeGoal) public {
+        TutorGroup storage tg = tutorGroups[_course][_group];
+	// TODO check that not exist
+        tg.tutor = _tutor;
+        tg.gradeGoal = _gradeGoal;
+        tg.amount = 0;
+        tg.nContributions = 0;
+        tg.resolved = false;
     }
 
-    function payIn(uint32 _tutorGroupId) public payable {
-        TutorGroup storage t = tutorGroupIdToTutorGroup[_tutorGroupId];
-        Student storage s = t.numStudentToStudent[t.numStudents++];
-        s.addr = msg.sender;
-        s.amount = msg.value;
-        t.amount += s.amount;
-        emit PayedIn(_tutorGroupId, t.amount);
+    function payIn(string _course, uint8 _group) public payable {
+        TutorGroup storage t = tutorGroups[_course][_group];
+        Contribution storage c = t.contributions[t.nContributions++];
+	c.addr = msg.sender;
+        c.amount = msg.value;
+	t.amount += c.amount;
+        emit PayedIn(_course, _group, t.amount);
     }
 
-    function resolve(uint32 _tutorGroupId) public { // possible change modifier to something more restrictive
-        TutorGroup storage t = tutorGroupIdToTutorGroup[_tutorGroupId];
+    function resolve(string _course, uint8 _group) public {
+        TutorGroup storage t = tutorGroups[_course][_group];
         require (
             t.resolved == false,
             "Group already resolved"    
         );
 
         TUMOracle oracle = TUMOracle(tumOracle);
-        uint8 grade = oracle.getGrade(t.courseId, t.groupId);
+        uint8 grade = oracle.getGrade(_course, _group);
         if (grade <= t.gradeGoal) {
             t.tutor.transfer(t.amount); // send the money to tutor
         } else {
-            for (uint i = 0; i < t.numStudents; i++) {
-                Student storage s = t.numStudentToStudent[i];
+            for (uint8 i = 0; i < t.nContributions; i++) {
+                Contribution storage s = t.contributions[i];
                 s.addr.transfer(s.amount);
             }
         }
