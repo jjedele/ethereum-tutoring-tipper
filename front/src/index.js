@@ -10,8 +10,8 @@ import Tipping from "./contracts/Tipping.json";
 import TUMOracle from "./contracts/TUMOracle.json";
 
 // log the contracts
-console.log(Tipping)
-console.log(TUMOracle)
+// console.log(Tipping)
+// console.log(TUMOracle)
 
 const options = {
     web3: {
