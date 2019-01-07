@@ -7,9 +7,10 @@ import { Drizzle, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
 
 import TUMOracle from './contracts/TUMOracle.json';
+import Tipping from './contracts/Tipping.json';
 
 const options = {
-  contracts: [TUMOracle],
+  contracts: [TUMOracle, Tipping],
   web3: {
     fallback: {
       url: 'ws://127.0.0.1:7545'
