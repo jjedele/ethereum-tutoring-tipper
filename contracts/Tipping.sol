@@ -45,9 +45,9 @@ contract Tipping {
     function payIn(string _course, uint8 _group) public payable {
         TutorGroup storage t = tutorGroups[_course][_group];
         Contribution storage c = t.contributions[t.nContributions++];
-	c.addr = msg.sender;
+        c.addr = msg.sender;
         c.amount = msg.value;
-	t.amount += c.amount;
+        t.amount += c.amount;
         emit PayedIn(_course, _group, t.amount);
     }
 
