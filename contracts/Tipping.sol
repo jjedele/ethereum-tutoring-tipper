@@ -6,8 +6,10 @@ contract Tipping {
   
     // interface for the grade results
     address tumOracle;
+    uint8 public tgNum = 0;
 
-    mapping(string => mapping(uint8 => TutorGroup)) tutorGroups;
+    mapping(uint8 => TutorGroup) public tgNumToTutorGroup;
+    mapping(string => mapping(uint8 => uint8)) public courseGroupToTgNum;
     
     constructor (address _tumOracle) public {
         tumOracle = _tumOracle;
@@ -33,8 +35,11 @@ contract Tipping {
     event PayedIn(string course, uint8 group, uint newTotal);
 
     function newTutorGroup(address _tutor, string _course, uint8 _group, uint8 _gradeGoal) public {
-        TutorGroup storage tg = tutorGroups[_course][_group];
-	// TODO check that not exist
+        tgNum = tgNum + 1;
+        courseGroupToTgNum[_course][_group] = tgNum; // assign mapping by course/group
+        TutorGroup storage tg = tgNumToTutorGroup[tgNum]; // implicit assign tg to mapping
+	
+    // TODO check that not exist
         tg.tutor = _tutor;
         tg.gradeGoal = _gradeGoal;
         tg.amount = 0;
