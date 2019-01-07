@@ -13,13 +13,13 @@ class Summary extends Component {
               <h3>Accounts:</h3>
               <ul>
                 {Object.keys(drizzleState.accountBalances).map(acc => (
-                  <li>{acc}</li>
+                  <li key={acc}>{acc}</li>
                 ))}
               </ul>
               <h3>Contracts:</h3>
               <ul>
                 {Object.keys(drizzle.contracts).map(con => (
-                  <li>{con}</li>
+                  <li key={con}>{con}</li>
                 ))}
               </ul>
             </div>
