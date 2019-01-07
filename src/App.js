@@ -5,23 +5,17 @@ import { DrizzleContext } from 'drizzle-react';
 import AdminForm from './AdminForm';
 import Summary from './Summary';
 import Create from './Create';
-import logo from './logo.svg';
 import './App.css';
 
-const Index = () => <h2>Home</h2>;
-//const Create = () => <h2>Create Contract</h2>;
 const Status = () => <h2>Contract Status</h2>;
 
 class App extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
 
   render() {
     return (
       <DrizzleContext.Consumer>
         {drizzleContext => {
-          const { drizzle, drizzleState, initialized } = drizzleContext;
+          const { initialized } = drizzleContext;
 
           if (!initialized) {
             return <b>Loading...</b>;

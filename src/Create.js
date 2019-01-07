@@ -15,7 +15,7 @@ class Create extends Component {
     let contract = drizzle.contracts['Tipping'];
     console.log(contract);
 
-    if (op == "TG") {
+    if (op === "TG") {
       let tutor = this.tutorInput.value;
       let grade = parseFloat(this.gradeInput.value);
 
