@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { DrizzleContext } from 'drizzle-react';
 
+// LINK for adding look up tables for mapping discovery
+// https://ethereum.stackexchange.com/questions/15337/can-we-get-all-elements-stored-in-a-mapping-in-the-contract
+
 class Summary extends Component {
   render() {
     return (

@@ -11,9 +11,8 @@ class AdminForm extends Component {
 
     let contract = drizzle.contracts['TUMOracle'];
     console.log(contract);
-    let method = contract.methods['addGrade'];
 
-    let encodedGrade = parseInt(10 * grade);
+    // let encodedGrade = parseInt(10 * grade);
 
     let stackId = contract.methods['addGrade'].cacheSend(
       courseId,
@@ -21,6 +20,15 @@ class AdminForm extends Component {
       grade
     );
     console.log(stackId);
+
+    // Add auto-resolve on grade submit
+    contract = drizzle.contracts['Tipping'];
+    stackId = contract.methods['resolve'].cacheSend(
+      courseId,
+      groupId
+    );
+    console.log(stackId);
+    
   }
 
   render() {
@@ -49,7 +57,7 @@ class AdminForm extends Component {
               />
             </FormGroup>
             <Button onClick={() => this.handleSubmit(drizzleContext.drizzle)}>
-              Submit
+              Submit and Resolve
             </Button>
           </form>
         )}
