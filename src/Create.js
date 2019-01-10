@@ -9,7 +9,7 @@ class Create extends Component {
     
     // common to all op
     let courseId = this.courseIdInput.value;
-    let groupId = parseInt(this.groupIdInput.value);
+    let groupId = this.groupIdInput.value;
     let stackId = null;
 
     let contract = drizzle.contracts['Tipping'];
