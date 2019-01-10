@@ -6,8 +6,10 @@ contract Tipping {
   
     // interface for the grade results
     address tumOracle;
+    uint8 public tgNum; // iteration over groups 1/3
 
     mapping(string => mapping(uint8 => TutorGroup)) tutorGroups;
+    mapping(uint8 => TutorGroup) tgNumToTg; // iteration over groups 2/3
     
     constructor (address _tumOracle) public {
         tumOracle = _tumOracle;
@@ -34,7 +36,8 @@ contract Tipping {
 
     function newTutorGroup(address _tutor, string _course, uint8 _group, uint8 _gradeGoal) public {
         TutorGroup storage tg = tutorGroups[_course][_group];
-	// TODO check that not exist
+        tgNumToTg[tgNum++] = tg; // iteration over groups 3/3
+	    // TODO check that not exist
         tg.tutor = _tutor;
         tg.gradeGoal = _gradeGoal;
         tg.amount = 0;
