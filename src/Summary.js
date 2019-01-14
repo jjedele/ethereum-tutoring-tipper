@@ -10,6 +10,7 @@ class Summary extends Component {
       <DrizzleContext.Consumer>
         {drizzleContext => {
           console.log('Drizzle Context', drizzleContext);
+          //console.log(drizzleContext.drizzleState.contracts.Tipping.tgNum());
           const { drizzle, drizzleState } = drizzleContext;
           return (
             <div>

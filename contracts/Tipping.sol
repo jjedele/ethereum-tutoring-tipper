@@ -13,6 +13,7 @@ contract Tipping {
     
     constructor (address _tumOracle) public {
         tumOracle = _tumOracle;
+        tgNum = 0;
     }
 
     struct Contribution {
@@ -33,6 +34,10 @@ contract Tipping {
     }
 
     event PayedIn(string course, uint8 group, uint newTotal);
+
+    function getTgNum() public view returns(uint8) {
+        return tgNum;
+    }
 
     function newTutorGroup(address _tutor, string _course, uint8 _group, uint8 _gradeGoal) public {
         TutorGroup storage tg = tutorGroups[_course][_group];

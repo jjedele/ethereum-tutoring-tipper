@@ -4,8 +4,15 @@ import { DrizzleContext } from 'drizzle-react';
 import web3 from 'web3';
 
 class Create extends Component {
+  // constructor(props) {
+  //   super(props)
+  //   this.contracts = DrizzleContext.drizzle.contracts;
+  //   console.log(this.contracts)
+  //   this.tgIndex = this.contracts.Tipping.tgNum.cacheCall();
+  // }
   handleSubmit(drizzle, op) {
-    console.log(drizzle);
+
+    //console.log(drizzle);
     
     // common to all op
     let courseId = this.courseIdInput.value;
@@ -13,7 +20,14 @@ class Create extends Component {
     let stackId = null;
 
     let contract = drizzle.contracts['Tipping'];
-    console.log(contract);
+    // console.log(contract);
+    // // contract.then(async instance => {
+    // //   let v = await instance.tgNum();
+    // //   console.log(v);
+    // // })
+    // console.log(contract.address);
+    // let v = this.props.Tipping.tgNum[this.tgIndex].value;
+    // console.log({v});
 
     if (op === "TG") {
       let tutor = this.tutorInput.value;
@@ -27,8 +41,8 @@ class Create extends Component {
       )
     } else {
       let account = this.accountInput.value;
-      let amount = web3.toWei(this.amountInput.value, 'ether');
-
+      let amount = web3.utils.toWei(this.amountInput.value, 'ether');
+      console.log(account)
       stackId = contract.methods['payIn'].cacheSend(
         courseId,
         groupId,
