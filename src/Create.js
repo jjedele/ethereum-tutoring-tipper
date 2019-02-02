@@ -15,9 +15,13 @@ class Create extends Component {
     //console.log(drizzle);
     
     // common to all op
-    let courseId = this.courseIdInput.value;
-    let groupId = this.groupIdInput.value;
+    let create_courseId = this.create_courseIdInput.value;
+    let create_groupId = this.create_groupIdInput.value;
+    let pay_courseId = this.pay_courseIdInput.value;
+    let pay_groupId = this.pay_groupIdInput.value;
     let stackId = null;
+
+   
 
     let contract = drizzle.contracts['Tipping'];
     // console.log(contract);
@@ -32,20 +36,28 @@ class Create extends Component {
     if (op === "TG") {
       let tutor = this.tutorInput.value;
       let grade = parseFloat(this.gradeInput.value);
+      console.log("make tutorgroup");
+      console.log("create courseId " + create_courseId);
+      console.log("create groupId " + create_groupId);
+      console.log("gradeGoal " + grade);
 
       stackId = contract.methods['newTutorGroup'].cacheSend(
         tutor,
-        courseId,
-        groupId,
+        create_courseId,
+        create_groupId,
         grade
       )
     } else {
       let account = this.accountInput.value;
       let amount = web3.utils.toWei(this.amountInput.value, 'ether');
-      console.log(account)
+      console.log("paying in");
+      console.log("pay courseId " + pay_courseId);
+      console.log("pay groupId " + pay_groupId);
+      console.log("account " + account);
+      console.log("amount " + amount);
       stackId = contract.methods['payIn'].cacheSend(
-        courseId,
-        groupId,
+        pay_courseId,
+        pay_groupId,
         {from: account, value: amount}
       )
     }
@@ -72,13 +84,13 @@ class Create extends Component {
               <FormControl
                 name="courseID"
                 type="text"
-                inputRef={input => (this.courseIdInput = input)}
+                inputRef={input => (this.create_courseIdInput = input)}
               />
               <ControlLabel>Group</ControlLabel>
               <FormControl
                 name="groupID"
                 type="text"
-                inputRef={input => (this.groupIdInput = input)}
+                inputRef={input => (this.create_groupIdInput = input)}
               />
               <ControlLabel>Grade Goal</ControlLabel>
               <FormControl
@@ -100,13 +112,13 @@ class Create extends Component {
               <FormControl
                 name="courseID"
                 type="text"
-                inputRef={input => (this.courseIdInput = input)}
+                inputRef={input => (this.pay_courseIdInput = input)}
               />
               <ControlLabel>Group</ControlLabel> 
               <FormControl
                 name="groupID"
                 type="text"
-                inputRef={input => (this.groupIdInput = input)}
+                inputRef={input => (this.pay_groupIdInput = input)}
               />
               <ControlLabel>Student Account</ControlLabel>
               <FormControl

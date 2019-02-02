@@ -6,15 +6,11 @@ contract Tipping {
   
     // interface for the grade results
     address tumOracle;
-    uint8 public tgNum;
 
     mapping(string => mapping(uint8 => TutorGroup)) tutorGroups;
-    mapping(uint8 => TutorGroup) tgNumToTg; // iteration over groups 2/3
-    
     
     constructor (address _tumOracle) public {
         tumOracle = _tumOracle;
-        tgNum = 0;
     }
 
     struct Contribution {
@@ -36,14 +32,9 @@ contract Tipping {
 
     event PayedIn(string course, uint8 group, uint newTotal);
 
-    function getTgNum() public view returns(uint8) {
-        return tgNum;
-    }
-
     function newTutorGroup(address _tutor, string _course, uint8 _group, uint8 _gradeGoal) public {
         TutorGroup storage tg = tutorGroups[_course][_group];
-        tgNumToTg[tgNum++] = tg; // iteration over groups 3/3
-        // TODO check that not exist
+	// TODO check that not exist
         tg.tutor = _tutor;
         tg.gradeGoal = _gradeGoal;
         tg.amount = 0;
@@ -54,9 +45,9 @@ contract Tipping {
     function payIn(string _course, uint8 _group) public payable {
         TutorGroup storage t = tutorGroups[_course][_group];
         Contribution storage c = t.contributions[t.nContributions++];
-        c.addr = msg.sender;
+	c.addr = msg.sender;
         c.amount = msg.value;
-        t.amount += c.amount;
+	t.amount += c.amount;
         emit PayedIn(_course, _group, t.amount);
     }
 
@@ -82,4 +73,3 @@ contract Tipping {
     }
 
 }
-
